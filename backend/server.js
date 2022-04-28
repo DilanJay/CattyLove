@@ -36,7 +36,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/wishlist", wishlistRoutes);
  
 
-const PORT = process.env.PORT || 5201; // set the port
+const PORT = process.env.PORT || 5200; // set the port
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`)); // log to console.
 
 // if there are any unhandledRejection, then this function will log it and close the serever.
