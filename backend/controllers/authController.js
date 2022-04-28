@@ -55,6 +55,38 @@ const register = async (req, res, next) => {
     }
   };
 
+  const login = async (req, res) => {
+      try{
+        const { username, password } = req.body
+        const user = await User.findOne({ username }).lean()
+    
+        if (!user) {
+            return res.json({ status: 'error', error: 'Invalid username/password' })
+        }
+    
+        if (await bcrypt.compare(password, user.password)) {
+            // the username, password combination is successful
+    
+            const token = jwt.sign(
+                {
+                    id: user._id,
+                    username: user.username
+                },
+                JWT_SECRET
+            )
+    
+            return res.json({ status: 'ok', data: token })
+        }
+    
+        res.json({ status: 'error', error: 'Invalid username/password' })
+      }catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server Error", err: error });
+        next();
+      }
+	
+}
+
 module.exports = {
     register
 }
