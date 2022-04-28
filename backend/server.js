@@ -1,6 +1,7 @@
 const express = require("express");
 const connectDB = require("./config/db");
 const catRoutes = require("./routes/catRoute");
+const wishlistRoutes = require("./routes/wishlistRoute");
 
 
 var cors = require("cors");
@@ -30,7 +31,7 @@ app.use("/api/cat", catRoutes);
 // get all from wishlist
 // get one from wishlist
 // delete wishlist
-
+app.use("/api/wishlist", wishlistRoutes);
  
 
 const PORT = process.env.PORT || 5201; // set the port
