@@ -1,5 +1,16 @@
 const Cat = require("../models/cat");
+const User = require("../models/user");
 
+//GET
+const getCats = async (req, res, next) => {
+  try {
+    const cats = await Cat.find({});
+    res.status(200).json(cats);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
 const addCat = async (req, res, next) => {
     try {
       let requestBody = req.body;
@@ -35,4 +46,5 @@ const getCatById = async (req, res, next) => {
   module.exports = {
     addCat,
     getCatById,
+    getCats
   };
