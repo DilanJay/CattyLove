@@ -20,7 +20,19 @@ const addCat = async (req, res, next) => {
       next();
     }
   };
+  // GET ID
+const getCatById = async (req, res, next) => {
+    try {
+      const cat = await Cat.findById(req.params.id);
+  
+      res.status(200).json(cat);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Server Error" });
+    }
+  };
 
   module.exports = {
     addCat,
+    getCatById,
   };
