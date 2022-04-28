@@ -3,6 +3,7 @@ const connectDB = require("./config/db");
 const catRoutes = require("./routes/catRoute");
 const wishlistRoutes = require("./routes/wishlistRoute");
 const authRoutes = require("./routes/authRoute");
+const commentRoutes = require("./routes/commentRoute");
 
 var cors = require("cors");
 connectDB();
@@ -20,7 +21,7 @@ app.use("/api/cat", catRoutes);
 
 
 // add comment
-
+app.use("/api/commnet", commentRoutes);
 // create new user
 // read user
 // update user
