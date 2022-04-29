@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { IconContext } from "react-icons";
 import { SidebarData } from "./SidebarData";
@@ -9,10 +9,28 @@ import catImg from "../../img/cat.jpg";
 import StylishButton from "../stylishButton/StylishButton";
 import * as IoIcons from "react-icons/io";
 function Navbar() {
+  let navigate = useNavigate();
   const [sidebar, setSidebar] = useState(false);
-
+  const [isLogIn, setisLogIn] = useState(false);
+  const [user, setUser] = useState({});
+  const [userLable, setUserLable] = useState("Hi User");
   const showSidebar = () => setSidebar(!sidebar);
-  let isLogIn = false;
+  useEffect(() => {
+    if (localStorage.getItem("authToken")) {
+      setisLogIn(true);
+
+      if (localStorage.getItem("currentSessionUsename")) {
+        let currenUserName = localStorage.getItem("username");
+        setUserLable(currenUserName);
+      }
+    }
+  }, []);
+  function LinkOnclick() {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("currentSessionUserID");
+    localStorage.removeItem("currentSessionUsename");
+    window.location.href = "/";
+  }
 
   return (
     <div>
@@ -29,16 +47,7 @@ function Navbar() {
             <Link to="#" className="menu-bars">
               <FaIcons.FaBars onClick={showSidebar} />
             </Link>
-            {/* <StylishButton btnName="View"></StylishButton> */}
           </div>
-
-          {/* <div>
-          <span>
-            <h2>Hi! username</h2>
-            <StylishButton btnName="Sign In"></StylishButton>
-            <StylishButton btnName="Sign Up"></StylishButton>
-          </span>
-        </div> */}
           <nav className={sidebar ? "nav-menu active" : "nav-menu"}>
             <ul className="nav-menu-items" onClick={showSidebar}>
               <li className="navbar-toggle">
@@ -71,27 +80,34 @@ function Navbar() {
                   </li>
                 );
               })}
-              <li className="nav-text">
-                <Link to="/">
-                  <IoIcons.IoIosLogOut />
-                  <span>Log out</span>
-                </Link>
-              </li>
-              <li className="nav-text">
-                <Link to="/signin">
-                  <IoIcons.IoIosLogOut />
-                  <span>Sign In</span>
-                </Link>
-              </li>
-              <li className="nav-text">
-                <Link to="/signup">
-                  <IoIcons.IoIosLogOut />
-                  <span>Sign Up</span>
-                </Link>
-              </li>
-              <li className="nav-text">
-                <h2 className="sidebar-header">Hi! Pubudi</h2>
-              </li>
+              {isLogIn === true ? (
+                <>
+                  <li className="nav-text">
+                    <Link to="/" onClick={LinkOnclick}>
+                      <IoIcons.IoIosLogOut />
+                      <span>Log out</span>
+                    </Link>
+                  </li>
+                  <li className="nav-text">
+                    <h2 className="sidebar-header">{userLable}</h2>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li className="nav-text">
+                    <Link to="/signin">
+                      <IoIcons.IoIosLogOut />
+                      <span>Sign In</span>
+                    </Link>
+                  </li>
+                  <li className="nav-text">
+                    <Link to="/signup">
+                      <IoIcons.IoIosLogOut />
+                      <span>Sign Up</span>
+                    </Link>
+                  </li>
+                </>
+              )}
             </ul>
           </nav>
         </IconContext.Provider>

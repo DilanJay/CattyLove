@@ -10,12 +10,12 @@ export const SidebarData = [
     icon: <AiIcons.AiFillHome />,
     cName: "nav-text",
   },
-  {
-    title: "Cat Profile",
-    path: "/catprofile",
-    icon: <GiIcons.GiBlackCat />,
-    cName: "nav-text",
-  },
+  // {
+  //   title: "Cat Profile",
+  //   path: "/catprofile",
+  //   icon: <GiIcons.GiBlackCat />,
+  //   cName: "nav-text",
+  // },
   {
     title: "Wishlist",
     path: "/wishlist",
