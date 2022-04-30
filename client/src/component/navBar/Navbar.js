@@ -8,6 +8,7 @@ import { SidebarData } from "./SidebarData";
 import catImg from "../../img/cat.jpg";
 import StylishButton from "../stylishButton/StylishButton";
 import * as IoIcons from "react-icons/io";
+import jwt from "jwt-decode";
 function Navbar() {
   let navigate = useNavigate();
   const [sidebar, setSidebar] = useState(false);
@@ -25,6 +26,7 @@ function Navbar() {
       }
     }
   }, []);
+
   function LinkOnclick() {
     localStorage.removeItem("authToken");
     localStorage.removeItem("currentSessionUserID");
