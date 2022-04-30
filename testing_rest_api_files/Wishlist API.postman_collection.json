@@ -1,0 +1,90 @@
+{
+	"info": {
+		"_postman_id": "123efb9e-858a-4916-b172-53708efdc858",
+		"name": "Wishlist API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add Cat to Wishlist",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\": \"6265777f64ea09ea0b9a650a\",\r\n    \"catId\" : \"62658dbe9c03fd4c20f56349\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5200/api/wishlist/6265777f64ea09ea0b9a650a",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5200",
+					"path": [
+						"api",
+						"wishlist",
+						"6265777f64ea09ea0b9a650a"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove Cat from Wishlist",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\": \"6265777f64ea09ea0b9a650a\",\r\n    \"catId\" : \"62658dbe9c03fd4c20f56349\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5200/api/wishlist/6265777f64ea09ea0b9a650a",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5200",
+					"path": [
+						"api",
+						"wishlist",
+						"6265777f64ea09ea0b9a650a"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Wishlist Cats",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5200/api/wishlist/6265777f64ea09ea0b9a650a",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5200",
+					"path": [
+						"api",
+						"wishlist",
+						"6265777f64ea09ea0b9a650a"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

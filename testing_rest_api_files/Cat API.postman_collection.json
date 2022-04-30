@@ -1,0 +1,111 @@
+{
+	"info": {
+		"_postman_id": "e1addf1e-f94e-4c2c-82cd-759048f9a65c",
+		"name": "Cat API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add New Cat",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\" : \"abc01\",\r\n    \"owner\" : \"owner01\",\r\n    \"birthYear\" : 2020,\r\n    \"isVacsinated\" : true,\r\n    \"breed\" : \"Munchkin cat\",\r\n    \"gender\" : \"Female\",\r\n    \"likeCount\" : 1,\r\n    \"location\" : [122390,998786],\r\n    \"imageUrl\": \"http://testurl.com/090989898\",\r\n    \"likes\":[],\r\n    \"comment\":[]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5200/api/cat",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5200",
+					"path": [
+						"api",
+						"cat"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Cat  Likes",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \r\n\r\n    \"likeCount\": 1,\r\n    \"catId\" : \"62658dbe9c03fd4c20f56349\",\r\n    \"userId\" : \"6265791b94cd7edbd527f10a\" \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5200/api/cat/like/62658dbe9c03fd4c20f56349",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5200",
+					"path": [
+						"api",
+						"cat",
+						"like",
+						"62658dbe9c03fd4c20f56349"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Single Cat",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5200/api/cat/62658dbe9c03fd4c20f56349",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5200",
+					"path": [
+						"api",
+						"cat",
+						"62658dbe9c03fd4c20f56349"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Cats",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5200/api/cat/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5200",
+					"path": [
+						"api",
+						"cat",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

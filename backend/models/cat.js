@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const commentSchema = require("./comment");
 const likeSchema = require("./like");
+const commentSchema = require("./comment");
 
 const catSchema = mongoose.Schema({
     name : {
@@ -41,7 +41,6 @@ const catSchema = mongoose.Schema({
     },
     likes : [likeSchema],
     comment : [commentSchema]
-
 },{collection : "cats"});
 
 const Cat = mongoose.model('Cat', catSchema);

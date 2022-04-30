@@ -136,7 +136,7 @@ function Login() {
   };
 
   return (
-    <div class="container emp-profile">
+    <div className="container emp-profile">
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -148,17 +148,17 @@ function Login() {
         draggable
         pauseOnHover
       />
-      <div class="form-horizontal">
-        <div class="row">
-          <div class="col-8 offset-4">{/* <h2>Sign Up</h2> */}</div>
+      <div className="form-horizontal">
+        <div className="row">
+          <div className="col-8 offset-4">{/* <h2>Sign Up</h2> */}</div>
           <StyleHeding name="Sign In"></StyleHeding>
         </div>
-        <div class="form-group row">
-          <label class="col-form-label col-4">Username</label>
-          <div class="col-8">
+        <div className="form-group row">
+          <label className="col-form-label col-4">Username</label>
+          <div className="col-8">
             <input
               type="text"
-              class="form-control"
+              className="form-control"
               name="username"
               required="required"
               placeholder="Username"
@@ -167,12 +167,12 @@ function Login() {
             />
           </div>
         </div>
-        <div class="form-group row">
-          <label class="col-form-label col-4">Password</label>
-          <div class="col-8">
+        <div className="form-group row">
+          <label className="col-form-label col-4">Password</label>
+          <div className="col-8">
             <input
               type="password"
-              class="form-control"
+              className="form-control"
               name="password"
               required="required"
               placeholder="Password"
@@ -182,7 +182,7 @@ function Login() {
           </div>
         </div>
       </div>
-      <div class="text-center">
+      <div className="text-center">
         {/* <StylishButton btnName="Sign In"></StylishButton> */}
         <button
           className="btncl fourth"
@@ -192,7 +192,7 @@ function Login() {
           Sign In
         </button>
       </div>
-      <div class="text-center">
+      <div className="text-center">
         Dont have an account? <Link to="/signup">Signup here</Link>
       </div>
     </div>

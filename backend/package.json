@@ -1,12 +1,15 @@
 {
-  "name": "cattylove",
+  "name": "catty-love-backend",
   "version": "1.0.0",
-  "description": "NIBM web api",
+  "description": "catty-love",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js"
   },
+  "keywords": [
+    "catty-love"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {

@@ -1,0 +1,100 @@
+{
+	"info": {
+		"_postman_id": "b87e555a-ad4c-469a-86fd-4b8fad4f8001",
+		"name": "Auth/User API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"test02\",\r\n    \"password\": \"123456\",\r\n    \"firstName\" : \"test02first\",\r\n    \"lastName\" : \"test02last\",\r\n    \"email\" : \"test02@gmail.com\",\r\n    \"contactNumber\" : \"0776655445\",\r\n    \"gender\" : \"Male\",\r\n    \"birthday\": \"11/10/1990\",\r\n    \"profession\": [\"SE\",\"QA\"]\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5200/api/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5200",
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				},
+				"description": "http://localhost:5200/api/auth/register"
+			},
+			"response": []
+		},
+		{
+			"name": "Auth Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"test03\",\r\n    \"password\": \"123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5200/api/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5200",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth Change Passward",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"token\" : \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNjU3OTFiOTRjZDdlZGJkNTI3ZjEwYSIsInVzZXJuYW1lIjoidGVzdDAzIiwiaWF0IjoxNjUwODE5Mjg3fQ.ZgVGtqfQvl4LcY7Ta3WDLlvtqG7F0SkGH6bAJ5JMlMw\",\r\n    \"newpassword\" : \"1234567\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5200/api/auth/changepassword",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5200",
+					"path": [
+						"api",
+						"auth",
+						"changepassword"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

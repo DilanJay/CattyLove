@@ -12,7 +12,7 @@ export const SidebarData = [
   },
   // {
   //   title: "Cat Profile",
-  //   path: "/catprofile",
+  //   path: "/catprofile/:id",
   //   icon: <GiIcons.GiBlackCat />,
   //   cName: "nav-text",
   // },

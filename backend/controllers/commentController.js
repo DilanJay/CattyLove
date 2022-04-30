@@ -8,23 +8,22 @@ const addCommentForCat = async (req, res, next) => {
     let result;
     const paramCatId = req.params.id;
     let { userId, catId, userName, comment } = req.body;
-
+    console.log("req.body", req.body);
+    console.log("paramCatId", paramCatId);
     const user = await User.findById({ _id: userId });
-    const cat = await Cat.findById(paramCatId);
-
-    console.log(user);
-    console.log(cat);
     if (!user) {
-      return res.status(406).json({
-        data: userId,
-        message: "User not found",
+      return res.json({
+        status: "error",
+        error: "no any user found for the user id",
       });
     }
-
+    const cat = await Cat.findById(paramCatId);
+    console.log(user);
+    console.log(cat);
     if (!cat) {
-      return res.status(406).json({
-        data: catId,
-        message: "Cat not found",
+      return res.json({
+        status: "error",
+        error: "no any cat found for the cat id",
       });
     } else {
       cat.comment.push({
@@ -35,12 +34,7 @@ const addCommentForCat = async (req, res, next) => {
       });
       result = await cat.save();
     }
-
-    // if (result != null) {
-    //   const comment = await CatComment.create({ userId, catId, userName, comment });
-    //}
-    console.log(result);
-    return res.status(200).json(result);
+    return res.status(200).json({ status: "OK", data: result });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server Error", err: error });
