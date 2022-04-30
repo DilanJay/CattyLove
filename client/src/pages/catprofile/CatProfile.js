@@ -1,12 +1,257 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useMatch } from "react-router-dom"; // dome v6
 import Commentbox from "../../component/commentbox/Commentbox";
 import StyleHeding from "../../component/honeheader/StyleHeding";
 import StylishButton from "../../component/stylishButton/StylishButton";
 import "./CatProfile.css";
-
+import axios from "axios";
+import { APIURI } from "../../config/config";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import jwt_decode from "jwt-decode";
+//https://stackoverflow.com/questions/65576997/how-to-pass-id-from-one-component-to-another-component-onclick-of-an-element
 function CatProfile() {
+  const [cat, setCat] = useState({});
+  const [isLogIn, setisLogIn] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const config = {
+    header: {
+      "Content-Type": "application/json",
+    },
+  };
+  const {
+    params: { id },
+  } = useMatch("/catprofile/:id");
+  console.log(id);
+
+  //console.log(e);
+
+  useEffect(() => {
+    if (localStorage.getItem("authToken")) {
+      setisLogIn(true);
+    }
+    if (id != null) {
+      fetchCatData();
+    } else {
+    }
+  }, [id]);
+
+  async function fetchCatData() {
+    try {
+      const result = await axios.get(`${APIURI}/cat/${id}`, config);
+      console.log("cat result", result);
+      if (result.data.status === "OK") {
+        setCat(result.data.data);
+        let catObjectArray = [];
+        if (result.data.data != null) {
+          catObjectArray = result.data.data.likes;
+        }
+        let catObj = catObjectArray.find((o) => o === id);
+
+        if (catObj != null) {
+          setIsLiked(true);
+        }
+      } else {
+        toast.error("something went wrong", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    } catch (error) {
+      toast.error("something went wrong", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  }
+
+  const addToWisListHandler = async (catId) => {
+    try {
+      if (window.confirm("Are you sure !")) {
+        if (
+          localStorage.getItem("authToken") &&
+          localStorage.getItem("currentSessionUserID")
+        ) {
+          let userId = localStorage.getItem("currentSessionUserID");
+          const result = await axios.post(
+            `${APIURI}/wishlist/${userId}`,
+            {
+              userId,
+              catId,
+            },
+            config
+          );
+          console.log("result", result);
+          if (result.data.status === "OK") {
+            toast.success("Successfully remove", {
+              position: "top-right",
+              autoClose: 1500,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+          } else if (result.data.status === "error") {
+            toast.error(result.data.error, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+          }
+        }
+      }
+    } catch (error) {
+      toast.error("Somthing wrong", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      console.log(error);
+    }
+  };
+
+  const addLikeHandler = async (catId) => {
+    try {
+      if (window.confirm("Are you sure !")) {
+        if (
+          localStorage.getItem("authToken") &&
+          localStorage.getItem("currentSessionUserID")
+        ) {
+          let userId = localStorage.getItem("currentSessionUserID");
+          const result = await axios.put(
+            `${APIURI}/cat/like/${catId}`,
+            {
+              likeCount: 1,
+              userId,
+              catId,
+            },
+            config
+          );
+          console.log("result", result);
+          if (result.data.status === "OK") {
+            toast.success("liked", {
+              position: "top-right",
+              autoClose: 1500,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+            setIsLiked(true);
+          } else if (result.data.status === "error") {
+            toast.error(result.data.error, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+          }
+        }
+      }
+    } catch (error) {
+      toast.error("Somthing wrong", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      console.log(error);
+    }
+  };
+  const adddisLikeHandler = async (catId) => {
+    try {
+      if (window.confirm("Are you sure !")) {
+        if (
+          localStorage.getItem("authToken") &&
+          localStorage.getItem("currentSessionUserID")
+        ) {
+          let userId = localStorage.getItem("currentSessionUserID");
+          const result = await axios.put(
+            `${APIURI}/cat/like/${catId}`,
+            {
+              likeCount: 1,
+              userId,
+              catId,
+            },
+            config
+          );
+          console.log("result", result);
+          if (result.data.status === "OK") {
+            toast.success("disliked", {
+              position: "top-right",
+              autoClose: 1500,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+            setIsLiked(false);
+          } else if (result.data.status === "error") {
+            toast.error(result.data.error, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+          }
+        }
+      }
+    } catch (error) {
+      toast.error("Somthing wrong", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      console.log(error);
+    }
+  };
   return (
     <div className="container emp-profile">
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <StyleHeding name="Cat Profile"></StyleHeding>
       <div>
         <div className="row">
@@ -14,7 +259,7 @@ function CatProfile() {
             <div className="profile-img">
               <img
                 className="img-fluid img-thumbnail shadow"
-                src="https://images.unsplash.com/photo-1519052537078-e6302a4968d4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+                src={cat.imageUrl}
                 alt=""
               />
               {/* <div className="file btn btn-lg btn-primary">
@@ -25,10 +270,10 @@ function CatProfile() {
           </div>
           <div className="col-md-6">
             <div className="profile-head">
-              <h5>abc01</h5>
-              <h6>Munchkin cat</h6>
+              <h5>{cat.name}</h5>
+              <h6>{cat.breed}</h6>
               <p className="proile-rating">
-                LIKES : <span>10</span>
+                LIKES : <span>{cat.likeCount}</span>
               </p>
               <ul className="nav nav-tabs" id="myTab" role="tablist">
                 <li className="nav-item">
@@ -44,59 +289,53 @@ function CatProfile() {
                     About
                   </a>
                 </li>
-                {/* <li className="nav-item">
-                  <a
-                    className="nav-link"
-                    id="profile-tab"
-                    data-toggle="tab"
-                    href="#profile"
-                    role="tab"
-                    aria-controls="profile"
-                    aria-selected="false"
-                  >
-                    Timeline
-                  </a>
-                </li> */}
               </ul>
             </div>
           </div>
-          {/* <div className="col-md-2">
-            <input
-              type="submit"
-              className="profile-edit-btn"
-              name="btnAddMore"
-              value="Edit Profile"
-            />
-          </div> */}
         </div>
         <div className="row">
           <div className="col-md-4">
             <div className="profile-work">
-              <h4>You have liked</h4>
-              <StylishButton btnName="Add to Wishlist +"></StylishButton>
-              <StylishButton btnName="Rm from Wishlist"></StylishButton>
-              <StylishButton btnName="Like 👍"></StylishButton>
-              <StylishButton btnName="Dis-Like 👎"></StylishButton>
+              {isLogIn === false ? (
+                <>
+                  <br />
+                  <h5>
+                    <b>
+                      To like, dislike and <br />
+                      add to wishlist, please login
+                    </b>
+                  </h5>
+                </>
+              ) : (
+                <>
+                  <button
+                    className="btncl fourth"
+                    onClick={() => addToWisListHandler(cat._id)}
+                  >
+                    Add to Wishlist +
+                  </button>
+                  {isLiked === false ? (
+                    <>
+                      <button
+                        className="btncl fourth"
+                        onClick={() => addLikeHandler(cat._id)}
+                      >
+                        Like 👍
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        className="btncl fourth"
+                        onClick={() => adddisLikeHandler(cat._id)}
+                      >
+                        Dis-Like 👎
+                      </button>
+                    </>
+                  )}
+                </>
+              )}
             </div>
-            {/* <div className="profile-work">
-              <p>WORK LINK</p>
-              <a href="http/google.com">Website Link</a>
-              <br />
-              <a href="http/google.com">Bootsnipp Profile</a>
-              <br />
-              <a href="http/google.com">Bootply Profile</a>
-              <p>SKILLS</p>
-              <a href="http/google.com">Web Designer</a>
-              <br />
-              <a href="http/google.com">Web Developer</a>
-              <br />
-              <a href="http/google.com">WordPress</a>
-              <br />
-              <a href="http/google.com">WooCommerce</a>
-              <br />
-              <a href="http/google.com">PHP, .Net</a>
-              <br />
-            </div> */}
           </div>
           <div className="col-md-8">
             <div className="tab-content profile-tab" id="myTabContent">
@@ -111,7 +350,7 @@ function CatProfile() {
                     <label>Cat Id</label>
                   </div>
                   <div className="col-md-6">
-                    <p>62658dbe9c03fd4c20f56349</p>
+                    <p>{cat._id}</p>
                   </div>
                 </div>
                 <div className="row">
@@ -119,7 +358,7 @@ function CatProfile() {
                     <label>Name</label>
                   </div>
                   <div className="col-md-6">
-                    <p>abc01</p>
+                    <p>{cat.name}</p>
                   </div>
                 </div>
                 <div className="row">
@@ -127,7 +366,7 @@ function CatProfile() {
                     <label>Birth Year</label>
                   </div>
                   <div className="col-md-6">
-                    <p>2020</p>
+                    <p>{cat.birthYear}</p>
                   </div>
                 </div>
                 <div className="row">
@@ -135,7 +374,7 @@ function CatProfile() {
                     <label>Vacsinated</label>
                   </div>
                   <div className="col-md-6">
-                    <p>Yes</p>
+                    <p>{cat.isVacsinated ? "Yes" : "No"}</p>
                   </div>
                 </div>
                 <div className="row">
@@ -143,7 +382,7 @@ function CatProfile() {
                     <label>Gender</label>
                   </div>
                   <div className="col-md-6">
-                    <p>Female</p>
+                    <p>{cat.gender}</p>
                   </div>
                 </div>
                 <div className="row">
@@ -155,76 +394,22 @@ function CatProfile() {
                   </div>
                 </div>
               </div>
-              {/* <div
-                className="tab-pane fade"
-                id="profile"
-                role="tabpanel"
-                aria-labelledby="profile-tab"
-              >
-                <div className="row">
-                  <div className="col-md-6">
-                    <label>Experience</label>
-                  </div>
-                  <div className="col-md-6">
-                    <p>Expert</p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-6">
-                    <label>Hourly Rate</label>
-                  </div>
-                  <div className="col-md-6">
-                    <p>10$/hr</p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-6">
-                    <label>Total Projects</label>
-                  </div>
-                  <div className="col-md-6">
-                    <p>230</p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-6">
-                    <label>English Level</label>
-                  </div>
-                  <div className="col-md-6">
-                    <p>Expert</p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-6">
-                    <label>Availability</label>
-                  </div>
-                  <div className="col-md-6">
-                    <p>6 months</p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-12">
-                    <label>Your Bio</label>
-                    <br />
-                    <p>Your detail description</p>
-                  </div>
-                </div>
-              </div> */}
             </div>
           </div>
         </div>
       </div>
       <br />
-      <div class="mapouter">
-        <div class="gmap_canvas">
+      <div className="mapouter">
+        <div className="gmap_canvas">
           <iframe
             width="100%"
             height="500"
             id="gmap_canvas"
             src="https://maps.google.com/maps?q=kurunegala&t=&z=13&ie=UTF8&iwloc=&output=embed"
-            frameborder="0"
+            frameBorder="0"
             scrolling="no"
-            marginheight="0"
-            marginwidth="0"
+            marginHeight="0"
+            marginWidth="0"
             title="aaaa"
           ></iframe>
           {/* <a href="https://fmovies-online.net"></a> */}
@@ -232,361 +417,9 @@ function CatProfile() {
         </div>
       </div>
       <br />
-      <Commentbox></Commentbox>
+      <Commentbox comentObject={cat.comment} catId={cat._id}></Commentbox>
     </div>
   );
 }
 
 export default CatProfile;
-
-//{
-/* <div classNameName="container bootstrap snippets bootdey">
-      <br /> <br /> <br /> <br />
-      <div classNameName="row">
-        <div classNameName="profile-nav col-md-3">
-          <div classNameName="panel">
-            <div classNameName="user-heading round">
-              <a>
-                <img
-                  src={"https://bootdey.com/img/Content/avatar/avatar3.png"}
-                  alt=""
-                />
-              </a>
-              <h1>Camila Smith</h1>
-              <p>deydey@theEmail.com</p>
-            </div>
-
-            <ul classNameName="nav nav-pills nav-stacked">
-              <li classNameName="active">
-                <a>
-                  {" "}
-                  <i classNameName="fa fa-user"></i> Profile
-                </a>
-              </li>
-              <li>
-                <a>
-                  {" "}
-                  <i classNameName="fa fa-calendar"></i> Recent Activity{" "}
-                  <span classNameName="label label-warning pull-right r-activity">
-                    9
-                  </span>
-                </a>
-              </li>
-              <li>
-                <a>
-                  {" "}
-                  <i classNameName="fa fa-edit"></i> Edit profile
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div classNameName="profile-info col-md-9">
-          <div classNameName="panel">
-            <form>
-              <textarea
-                placeholder="Whats in your mind today?"
-                rows="2"
-                classNameName="form-control input-lg p-text-area"
-              ></textarea>
-            </form>
-            <footer classNameName="panel-footer">
-              <button classNameName="btn btn-warning pull-right">Post</button>
-              <ul classNameName="nav nav-pills">
-                <li>
-                  <a>
-                    <i classNameName="fa fa-map-marker"></i>
-                  </a>
-                </li>
-                <li>
-                  <a>
-                    <i classNameName="fa fa-camera"></i>
-                  </a>
-                </li>
-                <li>
-                  <a>
-                    <i classNameName=" fa fa-film"></i>
-                  </a>
-                </li>
-                <li>
-                  <a>
-                    <i classNameName="fa fa-microphone"></i>
-                  </a>
-                </li>
-              </ul>
-            </footer>
-          </div>
-          <div classNameName="panel">
-            <div classNameName="bio-graph-heading">
-              Aliquam ac magna metus. Nam sed arcu non tellus fringilla
-              fringilla ut vel ispum. Aliquam ac magna metus.
-            </div>
-            <div classNameName="panel-body bio-graph-info">
-              <h1>Bio Graph</h1>
-              <div classNameName="row">
-                <div classNameName="bio-row">
-                  <p>
-                    <span>First Name </span>: Camila
-                  </p>
-                </div>
-                <div classNameName="bio-row">
-                  <p>
-                    <span>Last Name </span>: Smith
-                  </p>
-                </div>
-                <div classNameName="bio-row">
-                  <p>
-                    <span>Country </span>: Australia
-                  </p>
-                </div>
-                <div classNameName="bio-row">
-                  <p>
-                    <span>Birthday</span>: 13 July 1983
-                  </p>
-                </div>
-                <div classNameName="bio-row">
-                  <p>
-                    <span>Occupation </span>: UI Designer
-                  </p>
-                </div>
-                <div classNameName="bio-row">
-                  <p>
-                    <span>Email </span>: jsmith@flatlab.com
-                  </p>
-                </div>
-                <div classNameName="bio-row">
-                  <p>
-                    <span>Mobile </span>: (12) 03 4567890
-                  </p>
-                </div>
-                <div classNameName="bio-row">
-                  <p>
-                    <span>Phone </span>: 88 (02) 123456
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <div classNameName="row">
-              <div classNameName="col-md-6">
-                <div classNameName="panel">
-                  <div classNameName="panel-body">
-                    <div classNameName="bio-chart">
-                      <div
-                        style={{
-                          display: "inline",
-                          width: "100px",
-                          height: "100px",
-                        }}
-                      >
-                        <canvas width="100" height="100px"></canvas>
-                        <input
-                          classNameName="knob"
-                          data-width="100"
-                          data-height="100"
-                          data-displayprevious="true"
-                          data-thickness=".2"
-                          value="35"
-                          data-fgcolor="#e06b7d"
-                          data-bgcolor="#e8e8e8"
-                          style={{
-                            width: "54px",
-                            height: "33px",
-                            position: "absolute",
-                            verticalAlign: "middle",
-                            marginTop: "33px",
-                            marginLeft: "-77px",
-                            border: "0px",
-                            fontWeight: "bold",
-                            fontStyle: "normal",
-                            fontVariant: "normal",
-                            fontStretch: "normal",
-                            fontSize: "20px",
-                            lineHeight: "normal",
-                            fontFamily: "Arial",
-                            textAlign: "center",
-                            color: "rgb(224, 107, 125)",
-                            padding: "0px",
-                            webkitAppearance: "none",
-                            background: "none",
-                          }}
-                        />
-                      </div>
-                    </div>
-                    <div classNameName="bio-desk">
-                      <h4 classNameName="red">Envato Website</h4>
-                      <p>Started : 15 July</p>
-                      <p>Deadline : 15 August</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div classNameName="col-md-6">
-                <div classNameName="panel">
-                  <div classNameName="panel-body">
-                    <div classNameName="bio-chart">
-                      <div
-                        style={{
-                          display: "inline",
-                          width: "100px",
-                          height: "100px",
-                        }}
-                      >
-                        <canvas width="100" height="100px"></canvas>
-                        <input
-                          classNameName="knob"
-                          data-width="100"
-                          data-height="100"
-                          data-displayprevious="true"
-                          data-thickness=".2"
-                          value="63"
-                          data-fgcolor="#4CC5CD"
-                          data-bgcolor="#e8e8e8"
-                          //style="width: 54px; height: 33px; position: absolute; vertical-align: middle; margin-top: 33px; margin-left: -77px; border: 0px; font-weight: bold; font-style: normal; font-variant: normal; font-stretch: normal; font-size: 20px; line-height: normal; font-family: Arial; text-align: center; color: rgb(76, 197, 205); padding: 0px; -webkit-appearance: none; background: none;"
-                          style={{
-                            width: "54px",
-                            height: "33px",
-                            position: "absolute",
-                            verticalAlign: "middle",
-                            marginTop: "33px",
-                            marginLeft: "-77px",
-                            border: "0px",
-                            fontWeight: "bold",
-                            fontStyle: "normal",
-                            fontVariant: "normal",
-                            fontStretch: "normal",
-                            fontSize: "20px",
-                            lineHeight: "normal",
-                            fontFamily: "Arial",
-                            textAlign: "center",
-                            color: "rgb(224, 107, 125)",
-                            padding: "0px",
-                            webkitAppearance: "none",
-                            background: "none",
-                          }}
-                        />
-                      </div>
-                    </div>
-                    <div classNameName="bio-desk">
-                      <h4 classNameName="terques">ThemeForest CMS </h4>
-                      <p>Started : 15 July</p>
-                      <p>Deadline : 15 August</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div classNameName="col-md-6">
-                <div classNameName="panel">
-                  <div classNameName="panel-body">
-                    <div classNameName="bio-chart">
-                      <div
-                        style={{
-                          display: "inline",
-                          width: "100px",
-                          height: "100px",
-                        }}
-                      >
-                        <canvas width="100" height="100px"></canvas>
-                        <input
-                          classNameName="knob"
-                          data-width="100"
-                          data-height="100"
-                          data-displayprevious="true"
-                          data-thickness=".2"
-                          value="75"
-                          data-fgcolor="#96be4b"
-                          data-bgcolor="#e8e8e8"
-                          //style="width: 54px; height: 33px; position: absolute; vertical-align: middle; margin-top: 33px; margin-left: -77px; border: 0px; font-weight: bold; font-style: normal; font-variant: normal; font-stretch: normal; font-size: 20px; line-height: normal; font-family: Arial; text-align: center; color: rgb(150, 190, 75); padding: 0px; -webkit-appearance: none; background: none;"
-                          style={{
-                            width: "54px",
-                            height: "33px",
-                            position: "absolute",
-                            verticalAlign: "middle",
-                            marginTop: "33px",
-                            marginLeft: "-77px",
-                            border: "0px",
-                            fontWeight: "bold",
-                            fontStyle: "normal",
-                            fontVariant: "normal",
-                            fontStretch: "normal",
-                            fontSize: "20px",
-                            lineHeight: "normal",
-                            fontFamily: "Arial",
-                            textAlign: "center",
-                            color: "rgb(224, 107, 125)",
-                            padding: "0px",
-                            webkitAppearance: "none",
-                            background: "none",
-                          }}
-                        />
-                      </div>
-                    </div>
-                    <div classNameName="bio-desk">
-                      <h4 classNameName="green">VectorLab Portfolio</h4>
-                      <p>Started : 15 July</p>
-                      <p>Deadline : 15 August</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div classNameName="col-md-6">
-                <div classNameName="panel">
-                  <div classNameName="panel-body">
-                    <div classNameName="bio-chart">
-                      <div
-                        style={{
-                          display: "inline",
-                          width: "100px",
-                          height: "100px",
-                        }}
-                      >
-                        <canvas width="100" height="100px"></canvas>
-                        <input
-                          classNameName="knob"
-                          data-width="100"
-                          data-height="100"
-                          data-displayprevious="true"
-                          data-thickness=".2"
-                          value="50"
-                          data-fgcolor="#cba4db"
-                          data-bgcolor="#e8e8e8"
-                          //style="width: 54px; height: 33px; position: absolute; vertical-align: middle; margin-top: 33px; margin-left: -77px; border: 0px; font-weight: bold; font-style: normal; font-variant: normal; font-stretch: normal; font-size: 20px; line-height: normal; font-family: Arial; text-align: center; color: rgb(203, 164, 219); padding: 0px; -webkit-appearance: none; background: none;"
-                          style={{
-                            width: "54px",
-                            height: "33px",
-                            position: "absolute",
-                            verticalAlign: "middle",
-                            marginTop: "33px",
-                            marginLeft: "-77px",
-                            border: "0px",
-                            fontWeight: "bold",
-                            fontStyle: "normal",
-                            fontVariant: "normal",
-                            fontStretch: "normal",
-                            fontSize: "20px",
-                            lineHeight: "normal",
-                            fontFamily: "Arial",
-                            textAlign: "center",
-                            color: "rgb(224, 107, 125)",
-                            padding: "0px",
-                            webkitAppearance: "none",
-                            background: "none",
-                          }}
-                        />
-                      </div>
-                    </div>
-                    <div classNameName="bio-desk">
-                      <h4 classNameName="purple">Adobe Muse Template</h4>
-                      <p>Started : 15 July</p>
-                      <p>Deadline : 15 August</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> */
-//}
